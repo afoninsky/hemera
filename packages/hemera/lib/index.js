@@ -1017,59 +1017,72 @@ class Hemera extends EventEmitter {
       }
     }
 
-    let addDefinition = new Add(actMeta)
-
-    if (cb) {
-      // set callback
-      addDefinition.action = cb
-    }
-
-    addDefinition.actMeta.transport.topic = patternOnly.topic
-
-    // Support full / token wildcards in subject
-    // Convert nats wildcard tokens to RegexExp
-    addDefinition.actMeta.pattern.topic = Util.natsWildcardToRegex(
-      patternOnly.topic
+    this._series(
+      this,
+      this._serverExtIterator,
+      this._ext['onServerPreAdd'],
+      err => this._onServerPreAddCompleted(err)
     )
+  }
 
-    let handler = this._router.lookup(addDefinition.actMeta.pattern)
+  _onServerPreAddCompleted(err) {
+    if (err) { throw err }
 
-    // check if pattern is already registered
-    if (this._config.bloomrun.lookupBeforeAdd && handler) {
-      let error = new Errors.HemeraError(Constants.PATTERN_ALREADY_IN_USE, {
-        pattern: addDefinition.actMeta.pattern
-      })
+    // how can I pass `actMeta` and `cb` here ? :)
 
-      this.log.error(
-        {
-          pattern: addDefinition.actMeta.pattern
-        },
-        error
-      )
-      throw error
-    }
+    // let addDefinition = new Add(actMeta)
 
-    // check for invalid topic subscriptions
-    // it's not possible to register multiple patterns
-    // with different transport options to the same topic
-    const def = this._checkForTransportCollision(addDefinition)
-    if (def) {
-      this.log.error(
-        Constants.TRANSPORT_OPTIONS_DIFFER_DESC,
-        Util.pattern(addDefinition.actMeta.pattern),
-        Util.pattern(def.actMeta.pattern)
-      )
-      throw new Errors.HemeraError(Constants.TRANSPORT_OPTIONS_DIFFER)
-    }
+    // if (cb) {
+    //   // set callback
+    //   addDefinition.action = cb
+    // }
 
-    // add to bloomrun
-    this._router.add(patternOnly, addDefinition)
+    // addDefinition.actMeta.transport.topic = patternOnly.topic
 
-    this.log.info(patternOnly, Constants.ADD_ADDED)
+    // // Support full / token wildcards in subject
+    // // Convert nats wildcard tokens to RegexExp
+    // addDefinition.actMeta.pattern.topic = Util.natsWildcardToRegex(
+    //   patternOnly.topic
+    // )
 
-    this.subscribe(addDefinition)
+    // let handler = this._router.lookup(addDefinition.actMeta.pattern)
 
-    return addDefinition
+    // // check if pattern is already registered
+    // if (this._config.bloomrun.lookupBeforeAdd && handler) {
+    //   let error = new Errors.HemeraError(Constants.PATTERN_ALREADY_IN_USE, {
+    //     pattern: addDefinition.actMeta.pattern
+    //   })
+
+    //   this.log.error(
+    //     {
+    //       pattern: addDefinition.actMeta.pattern
+    //     },
+    //     error
+    //   )
+    //   throw error
+    // }
+
+    // // check for invalid topic subscriptions
+    // // it's not possible to register multiple patterns
+    // // with different transport options to the same topic
+    // const def = this._checkForTransportCollision(addDefinition)
+    // if (def) {
+    //   this.log.error(
+    //     Constants.TRANSPORT_OPTIONS_DIFFER_DESC,
+    //     Util.pattern(addDefinition.actMeta.pattern),
+    //     Util.pattern(def.actMeta.pattern)
+    //   )
+    //   throw new Errors.HemeraError(Constants.TRANSPORT_OPTIONS_DIFFER)
+    // }
+
+    // // add to bloomrun
+    // this._router.add(patternOnly, addDefinition)
+
+    // this.log.info(patternOnly, Constants.ADD_ADDED)
+
+    // this.subscribe(addDefinition)
+
+    // return addDefinition
   }
   /**
    * Check if a topic was already registered with different transport
