@@ -206,6 +206,12 @@ function onServerPreResponse(context, req, res, next) {
   next()
 }
 
+function onServerPreAdd(context, req, res, next) {
+  context.emit('serverPreAdd', context)
+
+  next()
+}
+
 module.exports.onClientPreRequest = [onClientPreRequest]
 module.exports.onClientPostRequest = [onClientPostRequest]
 module.exports.onServerPreRequest = [
@@ -214,3 +220,4 @@ module.exports.onServerPreRequest = [
 ]
 module.exports.onServerPreHandler = [onServerPreHandler]
 module.exports.onServerPreResponse = [onServerPreResponse]
+module.exports.onServerPreAdd = [onServerPreAdd]

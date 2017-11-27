@@ -25,6 +25,7 @@ class Extension {
       'onServerPreHandler',
       'onServerPreRequest',
       'onServerPreResponse',
+      'onServerPreAdd',
       'onClose'
     ]
     this.onClientPreRequest = []
@@ -33,6 +34,7 @@ class Extension {
     this.onServerPreHandler = []
     this.onServerPreRequest = []
     this.onServerPreResponse = []
+    this.onServerPreAdd = []
   }
 
   /**

@@ -129,6 +129,7 @@ class Hemera extends EventEmitter {
     this._ext.add('onServerPreRequest', DefaultExtensions.onServerPreRequest)
     this._ext.add('onServerPreHandler', DefaultExtensions.onServerPreHandler)
     this._ext.add('onServerPreResponse', DefaultExtensions.onServerPreResponse)
+    this._ext.add('onServerPreAdd', DefaultExtensions.onServerPreAdd)
 
     this._avvio = Avvio(this, {
       expose: {
